@@ -1,0 +1,10 @@
+:root {
+    box-sizing: border-box;
+    font-size: calc(0.4em + 1vw);
+ }
+ 
+ * {
+     box-sizing: inherit;
+     margin: 0;
+     padding: 0;
+ }
