@@ -8,7 +8,7 @@
     </div>
     <button @click="postGoal()">Post</button>
     <div class="footer">
-      <a href="https://github.com/EthanWhittier/creative-4">GitHub</a>
+      <a href="https://github.com/EthanWhittier/creative-4">Ethan Whittier - GitHub</a>
       </div>
   </div>
 </template>

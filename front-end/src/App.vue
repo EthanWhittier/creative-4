@@ -11,6 +11,12 @@
         <div class="nav-item">
         <router-link to="/post">Add</router-link>
         </div>
+        <div class="nav-item">
+          <router-link to="/edit">Edit</router-link>
+        </div>
+        <div class="nav-item">
+        <router-link to="/contact">Contact</router-link>
+      </div>
       </div>
     </div>
     <router-view/>

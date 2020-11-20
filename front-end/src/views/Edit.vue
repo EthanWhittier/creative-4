@@ -1,11 +1,10 @@
 <template>
-  <div class="home">
-    <div class="header">
-      <h1>Goals</h1>
+    <div class="edit">
+        <div class="header">
+      <h1>Edit Goals</h1>
+      <h3>Edit a description, then choose which goal to apply the change to.</h3>
     </div>
-    <div class="completed">
-      <h3>Completed goals: {{completed}} </h3>
-    </div>
+    <input v-model="editText" type="text" placeholder="New Description">
     <div class="goals" v-for="goal in goals" :key="goal.id">
       <div class="goal">
         <font-awesome-icon icon="bullseye"/>
@@ -13,75 +12,54 @@
         <p>{{goal.description}}</p>
       </div>
       <div class="buttons">
-        <button @click="deleteGoal(goal)">Delete Goal</button>
-        <button @click="complete(goal)">DONE</button>
+        <button @click="editGoal(goal)">Edit!</button>
       </div>
     </div>
     <div class="footer">
       <a href="https://github.com/EthanWhittier/creative-4">Ethan Whittier - GitHub</a>
       </div>
-  </div>
+    </div>
 </template>
 
+
 <script>
-// @ is an alias to /src
 import axios from 'axios';
 export default {
-  name: 'Home',
-  components: {
-    
-  },
-  data() {
-    return {
-      goals: [],
-      completed: 0
-    }
-  },
-  created() {
-    this.getGoals();
-    this.getCompleted();
-  },
-  methods: {
-    async getGoals() {
-      try {
-        let response = await axios.get("/api/goals");
-        this.goals = response.data;
-      } catch (error) {
-          //Error
-      }
+    data() {
+        return {
+            editText: '',
+            goals: []
+        }
     },
-    async getCompleted() {
-      try {
-        let response = await axios.get("/api/completed");
-        this.completed = response.data.length;
-      } catch (error) {
-        //ERROR
-      }
-    },
-    async complete(goal) {
-      try {
-        await axios.post('/api/complete');
-        this.completed += 1;
-        this.deleteGoal(goal);
-      } catch(error) {
-        //Errro
-      }
-    },
-    async deleteGoal(goal) {
-      try {
-        await axios.delete('/api/deletegoal/' + goal._id);
+    created() {
         this.getGoals();
-      } catch(error) {
-          //ERROR
-      }
     },
-  }
+    methods: {
+       async getGoals() {
+            try {
+                let response = await axios.get("/api/goals");
+                this.goals = response.data;
+            } catch (error) {
+                //Error
+            }
+        },
+        async editGoal(goal) {
+            try {
+                await axios.put('/api/edit/' + goal._id, {
+                    description: this.editText
+                });
+                this.editText = '';
+                this.getGoals();
+            } catch(error) {
+                //Error
+            }
+        }
+    }
 }
 </script>
 
 
 <style scoped>
-
 .goals {
   display: flex;
   flex-direction: column;
@@ -123,6 +101,12 @@ button {
   margin: .25em;
 }
 
+input[type=text] {
+  width: 20%;
+  padding: 10px 20px;
+  margin: 1em;
+  box-sizing: border-box;
+}
 
 .footer {
   position: absolute;
@@ -131,5 +115,11 @@ button {
   height: 2.5rem;
 }
 
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+}
 
 </style>

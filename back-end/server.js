@@ -26,25 +26,19 @@ app.use(bodyParser.urlencoded({
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'concactcreative4@gmail.com',
+      user: 'contactcreative4@gmail.com',
       pass: 'thisisapassword'
     }
   });
   
   var mailOptions = {
-    from: 'concactcreative4@gmail.com',
-    to: 'eiwhitt.99@gmail.com',
-    subject: 'Sending Email using Node.js',
+    from: 'contactcreative4@gmail.com',
+    to: 'contactcreative4@gmail.com',
+    subject: 'Suggestion',
     text: 'That was easy!'
   };
   
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-     //
-    } else {
-      //console.log('Email sent: ' + info.response);
-    }
-  });
+  
 
 // connect to the database
 mongoose.connect('mongodb://localhost:27017/goals', {
@@ -63,6 +57,18 @@ app.get('/api/goals', async (req, res) => {
 
 });
 
+app.put('/api/edit/:id', async (req, res) => {
+    try {
+        let goal = await Goal.findOne({
+            _id: req.params.id
+        });
+        goal.description = req.body.description;
+        await goal.save();
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
 
 app.get('/api/completed', async (req, res) => {
     try {
@@ -111,6 +117,21 @@ app.post('/api/post', async (req, res) => {
       res.sendStatus(500);
     }
   });
+
+  app.post('/api/contact', async (req, res) => {
+     mailOptions.text = req.body.name + ' suggested the following: ' + req.body.suggestion;
+     try {
+     transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+         res.sendStatus(500)
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    } catch(error) {
+        res.sendStatus(500);
+    }
+  })
 
 
 app.listen(3001, () => console.log('Server listening on port 3001!'));
